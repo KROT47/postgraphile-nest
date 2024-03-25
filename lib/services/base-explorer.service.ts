@@ -1,7 +1,12 @@
 import { ModulesContainer } from '@nestjs/core';
 import { Module } from '@nestjs/core/injector/module';
 import { InstanceWrapper } from '@nestjs/core/injector/instance-wrapper';
-import { flattenDeep, identity } from 'lodash';
+
+function flattenDeep(arr) {
+  return Array.isArray(arr)
+    ? arr.reduce((a, b) => a.concat(flattenDeep(b)), [])
+    : [arr];
+}
 
 export abstract class BaseExplorerService {
   constructor(protected readonly modulesContainer: ModulesContainer) {}
@@ -16,12 +21,12 @@ export abstract class BaseExplorerService {
     mapModule: (instance: InstanceWrapper, moduleRef: Module) => any,
   ) {
     const invokeMap = () =>
-      modules.map(module =>
-        [...module.providers.values()].map(wrapper =>
+      modules.map((module) =>
+        [...module.providers.values()].map((wrapper) =>
           mapModule(wrapper, module),
         ),
       );
-    return flattenDeep(invokeMap()).filter(identity);
+    return flattenDeep(invokeMap()).filter((x) => x);
   }
 
   /**

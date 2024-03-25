@@ -4,22 +4,23 @@ import {
   makeExtendSchemaPlugin,
   makeAddInflectorsPlugin,
   makeProcessSchemaPlugin,
-  gql } from 'graphile-utils';
+  gql,
+} from 'graphile-utils';
 import { ResolverWrapperRequirements } from '../interfaces/wrap-resolver-requirements.interface';
-import { isNil } from 'lodash';
 
 /**
  * Factory for easier creation of PostGraphile plugins
  */
 export class PluginFactory {
-
   public static createChangeNullabilityPlugin(
     typeName: string,
     fieldName: string,
     isNullable: boolean,
   ) {
     if (!typeName || !fieldName) {
-      throw new Error('typeName and fieldName are required for ChangeNullability');
+      throw new Error(
+        'typeName and fieldName are required for ChangeNullability',
+      );
     }
 
     typeName = typeName.trim();
@@ -70,7 +71,9 @@ export class PluginFactory {
     additionalGraphql = '',
   ) {
     if (!typeName || !fieldName || !fieldType) {
-      throw new Error('typeName, fieldName, and fieldType are required for ExtendSchema');
+      throw new Error(
+        'typeName, fieldName, and fieldType are required for ExtendSchema',
+      );
     }
 
     typeName = typeName.trim();
@@ -79,13 +82,16 @@ export class PluginFactory {
     const matches = fieldName.match(/^\w+/);
 
     // If no field name exists, then ignore creating the plugin
-    if (isNil(matches)) {
-      throw new Error('Unable to create ExtendSchema plugin because a field name'
-        + ' was not provided or is not in correct form. fieldname: ' + fieldName);
+    if (matches == null) {
+      throw new Error(
+        'Unable to create ExtendSchema plugin because a field name' +
+          ' was not provided or is not in correct form. fieldname: ' +
+          fieldName,
+      );
     }
 
     const fieldNameWithoutParams = matches[0];
-    return makeExtendSchemaPlugin(build => {
+    return makeExtendSchemaPlugin((build) => {
       return {
         typeDefs: gql`
           ${additionalGraphql}
@@ -96,7 +102,12 @@ export class PluginFactory {
         `,
         resolvers: {
           [typeName]: {
-            [fieldNameWithoutParams]: async (query, args, context, resolveInfo) => {
+            [fieldNameWithoutParams]: async (
+              query,
+              args,
+              context,
+              resolveInfo,
+            ) => {
               return await resolver(query, args, context, resolveInfo, build);
             },
           },

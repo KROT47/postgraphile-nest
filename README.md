@@ -22,7 +22,7 @@ $ npm i --save postgraphile-nest postgraphile
 
 ## Documentation
 
-Visit our [Wiki](https://github.com/alex-ald/postgraphile-nest/wiki) for documentiation and examples.
+Visit our [Wiki](https://github.com/KROT47/postgraphile-nest/wiki) for documentiation and examples.
 
 ## Thanks
 
